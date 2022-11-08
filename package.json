@@ -1,0 +1,19 @@
+{
+  "name": "smalimg",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Manju2367/smalimg.git"
+  },
+  "author": "manju",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Manju2367/smalimg/issues"
+  },
+  "homepage": "https://github.com/Manju2367/smalimg#readme"
+}
