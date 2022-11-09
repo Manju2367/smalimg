@@ -2,6 +2,16 @@ window.addEventListener("load", () => {
 
     // let inpImg = document.getElementById("inp-img")
 
+    const sendFiles = async (fileList) => {
+        let pathList = [];
+        for(let i = 0; i < fileList.length; i++) {
+            // check mime type
+            if(fileList.item(i).type.match(/image\/.*/))
+                pathList.push(fileList.item(i).path);
+        }
+        return window.electronAPI.compressImages(pathList);
+    }
+
     let inpContainer = document.getElementById("inp-container");
     inpContainer.ondragover = e => {
         e.preventDefault();
@@ -19,23 +29,20 @@ window.addEventListener("load", () => {
         inpContainer.classList.remove("draging");
         loadingContainer.classList.add("active");
         
-        let files = e.dataTransfer.files;
-        let pathList = [];
-        for(let i = 0; i < files.length; i++) {
-            // check mime type
-            if(files.item(i).type.match(/image\/.*/))
-                pathList.push(files.item(i).path);
-        }
-        console.table(pathList);
-
-        let result = await window.electronAPI.sendImgFiles(pathList);
-        loadingContainer.classList.remove("active");
+        let result = await sendFiles(e.dataTransfer.files);
         console.log(result);
+
+        loadingContainer.classList.remove("active");
     }
 
     let inpImg = document.getElementById("inp-img");
     inpImg.oninput = async (e) => {
-        
+        loadingContainer.classList.add("active");
+
+        let result = await sendFiles(e.target.files);
+        console.log(result);
+
+        loadingContainer.classList.remove("active");
     }
     
 });

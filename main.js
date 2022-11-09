@@ -24,7 +24,7 @@ const pngEncodeOptions = {
  * @param {*} e 
  * @param {Array<String>} fileList 
  */
-const sendImgFiles = async (e, fileList) => {
+const compressImages = async (e, fileList) => {
     const imagePoolList = fileList.map(fileName => {
         const imageFile = readFileSync(fileName);
         const image = imagePool.ingestImage(imageFile);
@@ -95,7 +95,7 @@ const createWindow = () => {
 }
 
 app.whenReady().then(() => {
-    ipcMain.handle("sendImgFiles", sendImgFiles);
+    ipcMain.handle("compressImages", compressImages);
 
     createWindow();
     app.on("activate", () => {
