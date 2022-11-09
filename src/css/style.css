@@ -1,0 +1,77 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+p {
+    margin: 0;
+    margin-top: 5px;
+    font-size: 20px;
+    font-family: Arial;
+    font-weight: bold;
+}
+
+div#main-container {
+    width: 100%;
+    height: 100%;
+}
+
+div#inp-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    transition: all .5s;
+}
+div#inp-container.draging {
+    background-color: #c4c4c4;
+}
+
+div#guide {
+    text-align: center;
+}
+
+label[for="inp-img"] {
+    display: inline-block;
+    width: 160px;
+    height: 44px;
+    padding: 10px 40px;
+    color: #eeeeee;
+    background-color: #384878;
+    cursor: pointer;
+    
+}
+
+input[type="file"] {
+    display: none;
+}
+
+div#loading-container {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+}
+div#loading-container.active {
+    display: flex;
+}
+
+img#gif-loading {
+    position: relative;
+    top: 140px;
+}
