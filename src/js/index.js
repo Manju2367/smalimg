@@ -1,7 +1,5 @@
 window.addEventListener("load", () => {
 
-    // let inpImg = document.getElementById("inp-img")
-
     const sendFiles = async (fileList) => {
         let pathList = [];
         for(let i = 0; i < fileList.length; i++) {
@@ -10,6 +8,18 @@ window.addEventListener("load", () => {
                 pathList.push(fileList.item(i).path);
         }
         return window.electronAPI.compressImages(pathList);
+    }
+
+
+
+    let imageTypeTo = document.getElementById("iamge-type-to");
+    let compress = document.getElementById("compress");
+    let convert = document.getElementById("convert");
+    compress.oninput = () => {
+        imageTypeTo.disabled = true;
+    }
+    convert.oninput = () => {
+        imageTypeTo.disabled = false;
     }
 
     let inpContainer = document.getElementById("inp-container");
