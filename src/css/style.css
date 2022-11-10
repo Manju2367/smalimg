@@ -17,7 +17,7 @@ body {
 p {
     margin: 0;
     margin-top: 5px;
-    font-size: 20px;
+    font-size: 16px;
     font-family: Arial;
     font-weight: bold;
 }
@@ -25,6 +25,7 @@ p {
 div#main-container {
     width: 100%;
     height: 100%;
+    background-color: #cbced8;
 }
 
 div#inp-container {
@@ -48,10 +49,15 @@ label[for="inp-img"] {
     width: 160px;
     height: 44px;
     padding: 10px 40px;
+    font-family: Arial;
+    font-weight: bold;
     color: #eeeeee;
-    background-color: #384878;
+    background-color: #465992;
     cursor: pointer;
-    
+    transition: all .5s;
+}
+label[for="inp-img"]:hover {
+    background-color: #2f3d64;
 }
 
 input[type="file"] {
