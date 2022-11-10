@@ -81,6 +81,15 @@ const compressImages = async (e, fileList) => {
     return "succeed";
 }
 
+/**
+ * 
+ * @param {*} e 
+ * @param {Array<String>} fileList 
+ */
+const convertImages = async (e, fileList) => {
+
+}
+
 const createWindow = () => {
     win = new BrowserWindow({
         width: 960,
@@ -97,6 +106,7 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
     ipcMain.handle("compressImages", compressImages);
+    ipcMain.handle("convertImages", convertImages);
 
     createWindow();
     app.on("activate", () => {
