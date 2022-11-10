@@ -42,17 +42,17 @@ div#menu-container {
     width: auto;
     height: auto;
     max-height: 100%;
-    margin: 20px;
+    margin: 20px 20px 0 20px;
     padding: 20px;
     border-radius: 10px;
     background-color: #eeeeee;
 }
 
-input[name="process"], label.lbl-input, select#iamge-type-to {
+input[name="process"], label.lbl-input, select#image-type-to {
     cursor: pointer;
 }
 
-label[for="iamge-type-to"] {
+label[for="image-type-to"] {
     margin-left: 21px;
 }
 
@@ -69,7 +69,7 @@ div#inp-container {
     transition: all .5s;
 }
 div#inp-container.draging {
-    background-color: #c4c4c4;
+    background-color: #b1b3bb;
 }
 
 div#guide {

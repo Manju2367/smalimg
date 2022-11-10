@@ -1,6 +1,6 @@
 window.addEventListener("load", () => {
 
-    const sendFiles = async (fileList) => {
+    const compress = async (fileList) => {
         let pathList = [];
         for(let i = 0; i < fileList.length; i++) {
             // check mime type
@@ -10,15 +10,25 @@ window.addEventListener("load", () => {
         return window.electronAPI.compressImages(pathList);
     }
 
+    const convert = async (fileList, type) => {
+        let pathList = [];
+        for(let i = 0; i < fileList.length; i++) {
+            // check mime type
+            if(fileList.item(i).type.match(/image\/.*/))
+                pathList.push(fileList.item(i).path);
+        }
+        return window.electronAPI.convertImages(pathList, type);
+    };
 
 
-    let imageTypeTo = document.getElementById("iamge-type-to");
-    let compress = document.getElementById("compress");
-    let convert = document.getElementById("convert");
-    compress.oninput = () => {
+
+    let imageTypeTo = document.getElementById("image-type-to");
+    let inpCompress = document.getElementById("compress");
+    let inpConvert = document.getElementById("convert");
+    inpCompress.oninput = () => {
         imageTypeTo.disabled = true;
     }
-    convert.oninput = () => {
+    inpConvert.oninput = () => {
         imageTypeTo.disabled = false;
     }
 
@@ -38,8 +48,15 @@ window.addEventListener("load", () => {
         e.preventDefault();
         inpContainer.classList.remove("draging");
         loadingContainer.classList.add("active");
-        
-        let result = await sendFiles(e.dataTransfer.files);
+
+        let result;
+        if(inpConvert.checked) {
+            let selectedIndex = imageTypeTo.selectedIndex;
+            let selectedType = imageTypeTo.options[selectedIndex].value;
+            result = await convert(e.dataTransfer.files, selectedType);
+        } else {
+            result = await compress(e.dataTransfer.files);
+        }
         console.log(result);
 
         loadingContainer.classList.remove("active");
@@ -49,7 +66,7 @@ window.addEventListener("load", () => {
     inpImg.oninput = async (e) => {
         loadingContainer.classList.add("active");
 
-        let result = await sendFiles(e.target.files);
+        let result = await compress(e.target.files);
         console.log(result);
 
         loadingContainer.classList.remove("active");

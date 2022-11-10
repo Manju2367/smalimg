@@ -85,9 +85,10 @@ const compressImages = async (e, fileList) => {
  * 
  * @param {*} e 
  * @param {Array<String>} fileList 
+ * @param {String} type 
  */
-const convertImages = async (e, fileList) => {
-
+const convertImages = async (e, fileList, type) => {
+    return `${ fileList[0] } is ${ type } type image file.`;
 }
 
 const createWindow = () => {
