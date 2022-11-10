@@ -5,6 +5,7 @@ const { cpus } = require("os");
 const { readFileSync, existsSync, mkdirSync, writeFile } = require("fs");
 const imagePool = new ImagePool(cpus().length);
 
+const appName = "smalimg";
 // 画像出力フォルダ
 const OUTPUT_DIR = "./dist";
 let win;
@@ -31,7 +32,7 @@ const compressImages = async (e, fileList) => {
         return { name: fileName, image}
     });
 
-    win.setTitle("smalimg - 圧縮中");
+    win.setTitle(`${ appName } - 圧縮中`);
 
     await Promise.all(
         imagePoolList.map(async (item) => {
@@ -75,7 +76,7 @@ const compressImages = async (e, fileList) => {
         });
     }
 
-    win.setTitle("smalimg");
+    win.setTitle(appName);
     
     return "succeed";
 }
@@ -84,7 +85,7 @@ const createWindow = () => {
     win = new BrowserWindow({
         width: 960,
         height: 640,
-        title: "smalimg",
+        title: appName,
         webPreferences: {
             preload: path.join(__dirname, "preload.js")
         }

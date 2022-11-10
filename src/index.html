@@ -11,16 +11,33 @@
     <body>
         
         <div id="main-container">
+            <div id="menu-container">
+                <div>
+                    <input type="radio" name="process" id="compress" checked><label for="compress" class="lbl-input">画像の圧縮</label>
+                </div>
+                <div>
+                    <div>
+                        <input type="radio" name="process" id="convert"><label for="convert" class="lbl-input">画像の変換</label>
+                    </div>
+                    <div>
+                        <label for="iamge-type-to">to</label>
+                        <select name="" id="iamge-type-to">
+                            <option value="jpg" selected>jpg</option>
+                            <option value="png">png</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
             <div id="inp-container">
                 <div id="guide">
                     <label for="inp-img">画像を選択</label>
                     <p>または画像をドロップ</p>
+                    <input type="file" id="inp-img" title="inp-img" accept="image/*" multiple>
                 </div>
-                <input type="file" id="inp-img" title="inp-img" accept="image/*" multiple>
             </div>
-            <div id="loading-container">
-                <img src="img/loading.gif" alt="Loading" id="gif-loading" width="100" height="100">
-            </div>
+        </div>
+        <div id="loading-container">
+            <img src="img/loading.gif" alt="Loading" id="gif-loading" width="100" height="100">
         </div>
 
     </body>
