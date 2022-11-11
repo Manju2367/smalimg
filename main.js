@@ -6,8 +6,11 @@ const { readFileSync, existsSync, mkdirSync, writeFile } = require("fs");
 const imagePool = new ImagePool(cpus().length);
 
 const appName = "smalimg";
-// 画像出力フォルダ
+// 画像出力フォルダの相対パス
 const OUTPUT_DIR = "./dist";
+// 画像出力フォルダの絶対パス
+const OUTPUT_DIR_ABS = path.resolve(OUTPUT_DIR);
+console.log(OUTPUT_DIR_ABS);
 let win;
 
 // use default options
@@ -46,6 +49,10 @@ const compressImages = async (e, fileList) => {
         })
     );
 
+    let returnObj = {
+        reuslt: "success",
+        pathList: []
+    };
     for(const item of imagePoolList) {
         const {
             name,
@@ -71,14 +78,16 @@ const compressImages = async (e, fileList) => {
         writeFile(`${ OUTPUT_DIR }/optimized_${ outputFilename }`, data.binary, (error, result) => {
             if(error) {
                 console.log("error", error)
-                return "failed";
+                returnObj.reuslt = "failure";
+                return returnObj;
             }
         });
+        returnObj.pathList.push(`${ OUTPUT_DIR_ABS }/optimized_${ outputFilename }`);
     }
 
     win.setTitle(appName);
     
-    return "succeed";
+    return returnObj;
 }
 
 /**
