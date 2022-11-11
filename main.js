@@ -10,7 +10,6 @@ const appName = "smalimg";
 const OUTPUT_DIR = "./dist";
 // 画像出力フォルダの絶対パス
 const OUTPUT_DIR_ABS = path.resolve(OUTPUT_DIR);
-console.log(OUTPUT_DIR_ABS);
 let win;
 
 // use default options
@@ -51,6 +50,7 @@ const compressImages = async (e, fileList) => {
 
     let returnObj = {
         reuslt: "success",
+        fileList: [],
         pathList: []
     };
     for(const item of imagePoolList) {
@@ -74,7 +74,6 @@ const compressImages = async (e, fileList) => {
         }
 
         let outputFilename = name.replace(/^.*\\/, "");
-        console.log(outputFilename);
         writeFile(`${ OUTPUT_DIR }/optimized_${ outputFilename }`, data.binary, (error, result) => {
             if(error) {
                 console.log("error", error)
@@ -82,6 +81,7 @@ const compressImages = async (e, fileList) => {
                 return returnObj;
             }
         });
+        returnObj.fileList.push(`optimized_${ outputFilename }`);
         returnObj.pathList.push(`${ OUTPUT_DIR_ABS }/optimized_${ outputFilename }`);
     }
 
@@ -98,6 +98,24 @@ const compressImages = async (e, fileList) => {
  */
 const convertImages = async (e, fileList, type) => {
     return `${ fileList[0] } is ${ type } type image file.`;
+}
+
+/**
+ * 
+ * @param {*} e 
+ * @param {String} url 
+ */
+const readBase64 = async (e, url) => {
+    let splitedWithComma = url.split(".");
+    const type = splitedWithComma[splitedWithComma.length - 1];
+    const base64Data = readFileSync(url, {
+        encoding: "base64"
+    });
+
+    return {
+        type: type,
+        base64: base64Data
+    };
 }
 
 const createWindow = () => {
@@ -117,6 +135,7 @@ const createWindow = () => {
 app.whenReady().then(() => {
     ipcMain.handle("compressImages", compressImages);
     ipcMain.handle("convertImages", convertImages);
+    ipcMain.handle("readBase64", readBase64);
 
     createWindow();
     app.on("activate", () => {

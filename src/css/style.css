@@ -101,8 +101,12 @@ input[type="file"] {
 /* otp container */
 div#otp-container {
     position: fixed;
-    bottom: 0;
+    bottom: -150px;
     width: 100%;
+    transition: all .5s ease;
+}
+div#otp-container.active {
+    bottom: 0;
 }
 
 div#menu-arrow-container {
@@ -123,12 +127,22 @@ img#menu-arrow {
     transform-origin: center center center;
     transform: rotate(-90deg);
     cursor: pointer;
+    transition: all .5s;
+}
+img#menu-arrow.active {
+    transform: rotate(90deg);
 }
 
-div#opt-body-container {
+div#otp-body-container {
     width: 100%;
-    height: 100px;
+    height: 150px;
+    padding: 10px;
     background-color: rgba(0, 0, 0, 0.4);
+}
+
+div#otp-item-container {
+    width: 100%;
+    height: 100%;
 }
 
 
