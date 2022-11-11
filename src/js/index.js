@@ -1,5 +1,17 @@
 window.addEventListener("load", () => {
 
+    let imageTypeTo = document.getElementById("image-type-to");
+    let inpCompress = document.getElementById("compress");
+    let inpConvert = document.getElementById("convert");
+    let inpContainer = document.getElementById("inp-container");
+    let loadingContainer = document.getElementById("loading-container");
+    let inpImg = document.getElementById("inp-img");
+    let menuArrow = document.getElementById("menu-arrow");
+    let otpContainer = document.getElementById("otp-container");
+    let otpItemContainer = document.getElementById("otp-item-container");
+
+
+
     const compress = async (fileList) => {
         let pathList = [];
         for(let i = 0; i < fileList.length; i++) {
@@ -20,7 +32,7 @@ window.addEventListener("load", () => {
         return window.electronAPI.convertImages(pathList, type);
     };
 
-    const readBase64 = async (path) => {
+    const copyImg = async (path) => {
         let returnObj = await window.electronAPI.readBase64(path);
         let type = returnObj.type;
         let base64 = returnObj.base64;
@@ -31,7 +43,6 @@ window.addEventListener("load", () => {
             canvas.width = img.width;
             canvas.height = img.height;
             ctx.drawImage(img, 0, 0);
-            document.body.append(canvas);
     
             canvas.toBlob(async blob => {
                 let item = {};
@@ -43,11 +54,51 @@ window.addEventListener("load", () => {
         img.src = `data:image/${ type };base64,${ base64 }`;
     }
 
+    const appendToOtp = (result) => {
+        while(otpItemContainer.firstChild) {
+            otpItemContainer.removeChild(otpItemContainer.firstChild);
+        }
 
+        for(let i = 0; i < result.pathList.length; i++) {
+            let div = document.createElement("div");
+            let span = document.createElement("span");
+            let imgCopyWrapper = document.createElement("div");
+            let imgCopy = document.createElement("img");
+            let imgCheck = document.createElement("img");
 
-    let imageTypeTo = document.getElementById("image-type-to");
-    let inpCompress = document.getElementById("compress");
-    let inpConvert = document.getElementById("convert");
+            imgCopyWrapper.classList.add("img-copy-wrapper");
+            imgCopyWrapper.dataset.path = result.pathList[i];
+            imgCopyWrapper.onclick = () => {
+                copyImg(result.pathList[i]).then(() => {
+                    imgCheck.classList.add("active");
+                    setInterval(() => {
+                        imgCheck.classList.remove("active");
+                    }, 2000);
+                }).catch(error => {
+                    console.error(error);
+                });
+            }
+            imgCopy.src = "img/copy.png";
+            imgCopy.alt = "Copy";
+            imgCopy.classList.add("img-copy");
+            imgCopy.width = 25;
+            imgCopy.height = 25;
+            imgCheck.src = "img/check.png";
+            imgCheck.alt = "✓";
+            imgCheck.classList.add("img-check");
+            imgCheck.width = 30;
+            imgCheck.height = 30;
+
+            span.innerText = result.fileList[i];
+            div.classList.add("otp-item");
+            div.append(span);
+            imgCopyWrapper.append(imgCopy);
+            div.append(imgCopyWrapper);
+            div.append(imgCheck);
+            otpItemContainer.append(div);
+        }
+    }
+
     inpCompress.oninput = () => {
         imageTypeTo.disabled = true;
     }
@@ -55,7 +106,6 @@ window.addEventListener("load", () => {
         imageTypeTo.disabled = false;
     }
 
-    let inpContainer = document.getElementById("inp-container");
     inpContainer.ondragover = e => {
         e.preventDefault();
         inpContainer.classList.add("draging");
@@ -66,7 +116,6 @@ window.addEventListener("load", () => {
         inpContainer.classList.remove("draging");
     }
 
-    let loadingContainer = document.getElementById("loading-container");
     inpContainer.ondrop = async (e) => {
         e.preventDefault();
         inpContainer.classList.remove("draging");
@@ -80,30 +129,23 @@ window.addEventListener("load", () => {
         } else {
             result = await compress(e.dataTransfer.files);
         }
+        appendToOtp(result);
 
         loadingContainer.classList.remove("active");
     }
 
-    let inpImg = document.getElementById("inp-img");
-    let menuArrow = document.getElementById("menu-arrow");
-    let otpContainer = document.getElementById("otp-container");
-    let otpItemContainer = document.getElementById("otp-item-container");
     inpImg.oninput = async (e) => {
         loadingContainer.classList.add("active");
 
-        while(otpItemContainer.firstChild) {
-            otpItemContainer.removeChild(otpItemContainer.firstChild);
+        let result;
+        if(inpConvert.checked) {
+            let selectedIndex = imageTypeTo.selectedIndex;
+            let selectedType = imageTypeTo.options[selectedIndex].value;
+            result = await convert(e.target.files, selectedType);
+        } else {
+            result = await compress(e.target.files);
         }
-
-        let result = await compress(e.target.files);
-        for(let i = 0; i < result.pathList.length; i++) {
-            let div = document.createElement("div");
-            let span = document.createElement("span");
-
-            span.innerText = result.fileList[i];
-            div.append(span);
-            otpItemContainer.append(div);
-        }
+        appendToOtp(result);
 
         loadingContainer.classList.remove("active");
     }
