@@ -118,6 +118,8 @@ window.addEventListener("load", () => {
     }
 
     inpContainer.ondrop = async (e) => {
+        if(e.dataTransfer.files.length === 0) return;
+
         e.preventDefault();
         inpContainer.classList.remove("draging");
         loadingContainer.classList.add("active");

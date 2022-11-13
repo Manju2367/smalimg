@@ -67,7 +67,9 @@ div#menu-container {
 input[name="process"], label.lbl-input, select#image-type-to {
     cursor: pointer;
 }
-
+label.lbl-input {
+    font-weight: bold;
+}
 label[for="image-type-to"] {
     margin-left: 21px;
 }

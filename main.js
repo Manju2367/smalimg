@@ -97,7 +97,66 @@ const compressImages = async (e, fileList) => {
  * @param {String} type 
  */
 const convertImages = async (e, fileList, type) => {
-    return `${ fileList[0] } is ${ type } type image file.`;
+    const imagePoolList = fileList.map(fileName => {
+        const imageFile = readFileSync(fileName);
+        const image = imagePool.ingestImage(imageFile);
+        return { name: fileName, image}
+    });
+
+    win.setTitle(`${ appName } - 変換中`);
+
+    await Promise.all(
+        imagePoolList.map(async (item) => {
+            const { image } = item;
+            if(type === "jpg") {
+                await image.encode(jpgEncodeOptions);
+            }
+            if(type === "png") {
+                await image.encode(pngEncodeOptions);
+            }
+        })
+    );
+
+    let returnObj = {
+        reuslt: "success",
+        fileList: [],
+        pathList: []
+    };
+    for(const item of imagePoolList) {
+        const {
+            name,
+            image: { encodedWith }
+        } = item;
+
+        let data;
+
+        if(type === "jpg") {
+            data = await encodedWith.mozjpeg;
+        }
+
+        if(type === "png") {
+            data = await encodedWith.oxipng;
+        }
+
+        if(!existsSync(OUTPUT_DIR)) {
+            mkdirSync(OUTPUT_DIR);
+        }
+
+        let outputFilename = name.replace(/^.*\\/, "").replace(/^(.+)\..+$/, "$1");
+        writeFile(`${ OUTPUT_DIR }/optimized_${ outputFilename }.${ type }`, data.binary, (error, result) => {
+            if(error) {
+                console.log("error", error)
+                returnObj.reuslt = "failure";
+                return returnObj;
+            }
+        });
+        returnObj.fileList.push(`optimized_${ outputFilename }.${ type }`);
+        returnObj.pathList.push(`${ OUTPUT_DIR_ABS }/optimized_${ outputFilename }.${ type }`);
+    }
+
+    win.setTitle(appName);
+    
+    return returnObj;
 }
 
 /**
