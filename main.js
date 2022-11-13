@@ -14,13 +14,17 @@ let win;
 
 // use default options
 const jpgEncodeOptions = {
-    mozjpeg: {  }
-};
-
-// use default options
+    mozjpeg: {}
+}
 const pngEncodeOptions = {
-    oxipng: {  }
-};
+    oxipng: {}
+}
+const webpEncodeOptions = {
+    webp: {}
+}
+const jxlEncodeOptions = {
+    jxl: {}
+}
 
 /**
  * 
@@ -44,6 +48,12 @@ const compressImages = async (e, fileList) => {
             }
             if(/\.(png)$/i.test(item.name)) {
                 await image.encode(pngEncodeOptions);
+            }
+            if(/\.(webp)$/i.test(item.name)) {
+                await image.encode(webpEncodeOptions);
+            }
+            if(/\.(jxl)$/i.test(item.name)) {
+                await image.encode(jxlEncodeOptions);
             }
         })
     );
@@ -114,6 +124,12 @@ const convertImages = async (e, fileList, type) => {
             if(type === "png") {
                 await image.encode(pngEncodeOptions);
             }
+            if(type === "webp") {
+                await image.encode(webpEncodeOptions);
+            }
+            if(type === "jxl") {
+                await image.encode(jxlEncodeOptions);
+            }
         })
     );
 
@@ -133,9 +149,14 @@ const convertImages = async (e, fileList, type) => {
         if(type === "jpg") {
             data = await encodedWith.mozjpeg;
         }
-
         if(type === "png") {
             data = await encodedWith.oxipng;
+        }
+        if(type === "webp") {
+            data = await encodedWith.webp;
+        }
+        if(type === "jxl") {
+            data = await encodedWith.jxl;
         }
 
         if(!existsSync(OUTPUT_DIR)) {
