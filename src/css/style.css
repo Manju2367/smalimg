@@ -136,13 +136,14 @@ div#menu-arrow-wrapper {
     height: 32px;
     background-color: rgba(0, 0, 0, 0.4);
     border-radius: 32px 32px 0 0;
+    overflow: hidden;
+    cursor: pointer;
 }
 img#menu-arrow {
     position: absolute;
     top: -16px;
     transform-origin: center center center;
     transform: rotate(-90deg);
-    cursor: pointer;
     transition: all .5s;
 }
 img#menu-arrow.active {
@@ -182,7 +183,7 @@ div.img-copy-wrapper {
     border-radius: 50%;
     align-items: center;
     justify-content: center;
-    transition: all .5s;
+    transition: all .25s;
 }
 div.img-copy-wrapper:hover {
     background-color: #b9b9b9;

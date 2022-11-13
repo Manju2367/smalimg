@@ -7,6 +7,7 @@ window.addEventListener("load", () => {
     let loadingContainer = document.getElementById("loading-container");
     let inpImg = document.getElementById("inp-img");
     let menuArrow = document.getElementById("menu-arrow");
+    let menuArrowWrapper = document.getElementById("menu-arrow-wrapper");
     let otpContainer = document.getElementById("otp-container");
     let otpItemContainer = document.getElementById("otp-item-container");
 
@@ -135,6 +136,8 @@ window.addEventListener("load", () => {
     }
 
     inpImg.oninput = async (e) => {
+        if(e.target.files.length === 0) return; 
+
         loadingContainer.classList.add("active");
 
         let result;
@@ -150,7 +153,7 @@ window.addEventListener("load", () => {
         loadingContainer.classList.remove("active");
     }
 
-    menuArrow.onclick = () => {
+    menuArrowWrapper.onclick = () => {
         if(otpContainer.classList.contains("active")) {
             otpContainer.classList.remove("active");
             menuArrow.classList.remove("active");
