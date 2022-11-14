@@ -205,7 +205,8 @@ const createWindow = () => {
         title: appName,
         webPreferences: {
             preload: path.join(__dirname, "preload.js")
-        }
+        },
+        icon: `${ __dirname }/src/img/icon.ico`
     });
 
     win.menuBarVisible = false;
