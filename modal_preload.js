@@ -8,7 +8,7 @@ const { convertStrToBool } = require("./src/js/util")
 // app.iniの存在チェック
 if(!existsSync("app.ini")) {
     const ini = 
-        `dist=${ path.join(__dirname, "/dist") }\n` +
+        `dist=C:\\Users\\${ userInfo().username }\\Pictures\\smalimg\n` +
         "devmode=false\n"
     writeFileSync("app.ini", ini, { encoding: "utf-8" })
 }

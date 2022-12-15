@@ -4,14 +4,14 @@ const { app, BrowserWindow, ipcMain, Menu, MenuItem, dialog, shell } = require("
 const propertiesReader = require("properties-reader")
 const path = require("path")
 const { ImagePool } = require("@squoosh/lib")
-const { cpus } = require("os")
+const { cpus, userInfo } = require("os")
 const { readFileSync, existsSync, mkdirSync, writeFile, writeFileSync } = require("fs")
 const { convertStrToBool } = require("./src/js/util")
 
 // app.iniの存在チェック
 if(!existsSync("app.ini")) {
     const ini = 
-        `dist=${ path.join(__dirname, "/dist") }\n` +
+        `dist=C:\\Users\\${ userInfo().username }\\Pictures\\smalimg\n` +
         "devmode=false\n"
     writeFileSync("app.ini", ini, { encoding: "utf-8" })
 }
