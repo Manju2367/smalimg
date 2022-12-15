@@ -1,15 +1,25 @@
+"use strict"
+
 const { app, BrowserWindow, ipcMain } = require("electron")
+const propertiesReader = require("properties-reader")
 const path = require("path")
 const { ImagePool } = require("@squoosh/lib")
 const { cpus } = require("os")
-const { readFileSync, existsSync, mkdirSync, writeFile } = require("fs")
+const { readFileSync, existsSync, mkdirSync, writeFile, writeFileSync } = require("fs")
+
+if(!existsSync("app.ini")) {
+    const ini = 
+        "# 出力ファイル\n" +
+        `dist=${ path.join(__dirname, "/dist") }\n\n` +
+        "devmode=false\n"
+    writeFileSync("app.ini", ini, { encoding: "utf-8" })
+}
 
 const imagePool = new ImagePool(cpus().length)
+const properties = propertiesReader("app.ini")
 const appName = "smalimg"
-// 画像出力フォルダの相対パス
-const OUTPUT_DIR = "./dist"
-// 画像出力フォルダの絶対パス
-const OUTPUT_DIR_ABS = path.resolve(OUTPUT_DIR)
+// 画像出力フォルダ
+const OUTPUT_DIR = properties.get("dist")
 // use default options
 const jpgEncodeOptions = {
     mozjpeg: {}
@@ -24,7 +34,7 @@ const jxlEncodeOptions = {
     jxl: {}
 }
 
-let win
+let win = null
 
 
 
@@ -94,7 +104,7 @@ const compressImages = async (e, fileList) => {
             }
         })
         returnObj.fileList.push(`optimized_${ outputFilename }`)
-        returnObj.pathList.push(`${ OUTPUT_DIR_ABS }/optimized_${ outputFilename }`)
+        returnObj.pathList.push(`${ OUTPUT_DIR }/optimized_${ outputFilename }`)
     }
 
     win.setTitle(appName)
@@ -174,7 +184,7 @@ const convertImages = async (e, fileList, type) => {
             }
         })
         returnObj.fileList.push(`optimized_${ outputFilename }.${ type }`)
-        returnObj.pathList.push(`${ OUTPUT_DIR_ABS }/optimized_${ outputFilename }.${ type }`)
+        returnObj.pathList.push(`${ OUTPUT_DIR }/optimized_${ outputFilename }.${ type }`)
     }
 
     win.setTitle(appName)
@@ -208,7 +218,7 @@ const createWindow = () => {
         webPreferences: {
             preload: path.join(__dirname, "preload.js")
         },
-        icon: `${ __dirname }/src/img/icon.ico`
+        icon: path.join(__dirname, "/src/img/icon.ico")
     })
 
     win.menuBarVisible = false

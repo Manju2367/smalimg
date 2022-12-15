@@ -2,3 +2,4 @@ node_modules/
 dist/
 out/
 todo.md
+app.ini

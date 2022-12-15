@@ -1,3 +1,5 @@
+"use strict"
+
 window.addEventListener("load", () => {
 
     let imageTypeTo = document.getElementById("image-type-to");

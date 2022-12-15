@@ -21,6 +21,7 @@
     "electron-builder": "^23.6.0"
   },
   "dependencies": {
-    "@squoosh/lib": "^0.4.0"
+    "@squoosh/lib": "^0.4.0",
+    "properties-reader": "^2.2.0"
   }
 }
