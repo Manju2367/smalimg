@@ -1,0 +1,115 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    width: 100%;
+    height: 100%;
+    font-family: Arial;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+p {
+    margin: 0;
+    font-size: 16px;
+    font-family: Arial;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+li {
+    margin: 0;
+}
+
+input[type="text"] {
+    font-size: 14px;
+}
+
+button {
+    cursor: pointer;
+}
+
+
+
+/* scroll bar */
+::-webkit-scrollbar{
+    width: 10px;
+    border-radius: 5px;
+}
+::-webkit-scrollbar-track{
+    background-color: #eeeeee;
+    border-radius: 5px;
+}
+::-webkit-scrollbar-thumb{
+    background-color: #bdbdbd;
+    border-radius: 5px;
+}
+
+
+
+/* toggle */
+.input-toggle {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.label-toggle {
+    width: 50px;
+    height: 24px;
+    background: #ccc;
+    position: relative;
+    display: inline-block;
+    border-radius: 40px;
+    transition: 0.4s;
+    box-sizing: border-box;
+}
+
+.label-toggle:after {
+    content: "";
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-radius: 100%;
+    left: 0;
+    top: 0;
+    z-index: 2;
+    background: #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    transition: 0.4s;
+}
+
+.input-toggle:checked + .label-toggle {
+    background-color: #4BD865;
+}
+
+.input-toggle:checked + .label-toggle:after {
+    left: 26px;
+}
+
+.button-toggle {
+    display: inline-block;
+    position: relative;
+    width: 50px;
+    height: 24px;
+}

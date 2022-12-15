@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>設定</title>
+
+        <link rel="stylesheet" href="css/common.css">
+        <link rel="stylesheet" href="css/modal.css">
+        <script src="js/modal.js"></script>
+    </head>
+    <body>
+
+        <div id="main-container">
+            <h1>設定</h1>
+            <hr>
+
+            <ul id="ul-settings">
+                <li class="list-settings" data-key="dist">
+                    <p class="list-label">出力フォルダ</p>
+                    <input type="text" id="input-out-dist" class="input-setting" title="out dist" value="" data-old="">
+                    <button id="button-out-dist">参照</button>
+                </li>
+                <li class="list-settings" data-key="devmode">
+                    <p class="list-label">開発者モード</p>
+                    <div class="button-toggle">
+                        <input type="checkbox" id="toggle-devmode" class="input-setting input-toggle" title="button-toggle" data-old="">
+                        <label for="toggle-devmode" class="label-toggle"></label>
+                    </div>
+                </li>
+            </ul>
+
+            <div id="button-container">
+                <button id="button-cancel">キャンセル</button>
+                <button id="button-commit">適用</button>
+                <button id="button-commit-and-close">適用して閉じる</button>
+            </div>
+        </div>
+
+    </body>
+</html>

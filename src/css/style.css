@@ -1,46 +1,3 @@
-* {
-    box-sizing: border-box;
-}
-
-html {
-    width: 100%;
-    height: 100%;
-    font-family: Arial;
-}
-
-body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
-
-p {
-    margin: 0;
-    margin-top: 5px;
-    font-size: 16px;
-    font-family: Arial;
-    font-weight: bold;
-}
-
-
-
-/* scroll bar */
-::-webkit-scrollbar{
-    width: 10px;
-    border-radius: 5px;
-}
-::-webkit-scrollbar-track{
-    background-color: #eeeeee;
-    border-radius: 5px;
-}
-::-webkit-scrollbar-thumb{
-    background-color: #bdbdbd;
-    border-radius: 5px;
-}
-
-
-
 /* main container */
 div#main-container {
     display: flex;
@@ -112,6 +69,11 @@ label[for="inp-img"]:hover {
 
 input[type="file"] {
     display: none;
+}
+
+p.caption {
+    margin-top: 5px;
+    font-weight: bold;
 }
 
 

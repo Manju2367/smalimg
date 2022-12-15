@@ -1,12 +1,13 @@
 "use strict"
 
-const { app, BrowserWindow, ipcMain } = require("electron")
+const { app, BrowserWindow, ipcMain, Menu, MenuItem, dialog } = require("electron")
 const propertiesReader = require("properties-reader")
 const path = require("path")
 const { ImagePool } = require("@squoosh/lib")
 const { cpus } = require("os")
 const { readFileSync, existsSync, mkdirSync, writeFile, writeFileSync } = require("fs")
 
+// app.iniの存在チェック
 if(!existsSync("app.ini")) {
     const ini = 
         "# 出力ファイル\n" +
@@ -36,6 +37,7 @@ const jxlEncodeOptions = {
 }
 
 let win = null
+let modal = null
 
 
 
@@ -225,12 +227,21 @@ const readBase64 = async (e, url) => {
     }
 }
 
+const openDialog = async () => {
+    return await dialog.showOpenDialog({
+        properties: [ "openDirectory" ]
+    })
+}
+
+const closeModal = () => {
+    modal.close()   
+}
+
 const createWindow = () => {
     win = new BrowserWindow({
         width: 960,
         height: 640,
         title: appName,
-        autoHideMenuBar: true,
         webPreferences: {
             preload: path.join(__dirname, "preload.js"),
             devTools: devmode
@@ -238,6 +249,33 @@ const createWindow = () => {
         icon: path.join(__dirname, "/src/img/icon.ico")
     })
 
+    const menu = new Menu()
+    menu.append(new MenuItem({
+        label: "設定",
+        click: () => {
+            modal = new BrowserWindow({
+                width: 640,
+                height: 480,
+                parent: win,
+                modal: true,
+                title: `設定 - ${ appName }`,
+                icon: path.join(__dirname, "/src/img/icon.ico"),
+                maximizable: false,
+                minimizable: false,
+                fullscreenable: false,
+                resizable: true,//false,
+                autoHideMenuBar: true,
+                webPreferences: {
+                    preload: path.join(__dirname, "modal_preload.js"),
+                    nodeIntegration: true,
+                    devTools: true//false
+                }
+            })
+
+            modal.loadFile(path.join(__dirname, "/src/modal.html"))
+        }
+    }))
+    win.setMenu(menu)
     win.loadURL(`file://${ __dirname }/src/index.html`)
 }
 
@@ -245,6 +283,8 @@ app.whenReady().then(() => {
     ipcMain.handle("compressImages", compressImages)
     ipcMain.handle("convertImages", convertImages)
     ipcMain.handle("readBase64", readBase64)
+    ipcMain.handle("openDialog", openDialog)
+    ipcMain.handle("closeModal", closeModal)
 
     createWindow()
     app.on("activate", () => {
