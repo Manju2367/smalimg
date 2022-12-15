@@ -1,6 +1,8 @@
 "use strict"
 
-const { contextBridge, ipcRenderer } = require("electron");
+const { contextBridge, ipcRenderer } = require("electron")
+
+
 
 contextBridge.exposeInMainWorld("electronAPI", {
     compressImages: (fileList) => ipcRenderer.invoke("compressImages", fileList),

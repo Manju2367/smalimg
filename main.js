@@ -19,7 +19,8 @@ const imagePool = new ImagePool(cpus().length)
 const properties = propertiesReader("app.ini")
 const appName = "smalimg"
 // 画像出力フォルダ
-const OUTPUT_DIR = properties.get("dist")
+const outputDir = properties.get("dist")
+const devmode = Boolean(properties.get("devmode"))
 // use default options
 const jpgEncodeOptions = {
     mozjpeg: {}
@@ -91,12 +92,12 @@ const compressImages = async (e, fileList) => {
             data = await encodedWith.oxipng
         }
 
-        if(!existsSync(OUTPUT_DIR)) {
-            mkdirSync(OUTPUT_DIR)
+        if(!existsSync(outputDir)) {
+            mkdirSync(outputDir)
         }
 
         let outputFilename = name.replace(/^.*\\/, "")
-        writeFile(`${ OUTPUT_DIR }/optimized_${ outputFilename }`, data.binary, (error, result) => {
+        writeFile(`${ outputDir }/optimized_${ outputFilename }`, data.binary, (error, result) => {
             if(error) {
                 console.log("error", error)
                 returnObj.reuslt = "failure"
@@ -104,7 +105,7 @@ const compressImages = async (e, fileList) => {
             }
         })
         returnObj.fileList.push(`optimized_${ outputFilename }`)
-        returnObj.pathList.push(`${ OUTPUT_DIR }/optimized_${ outputFilename }`)
+        returnObj.pathList.push(`${ outputDir }/optimized_${ outputFilename }`)
     }
 
     win.setTitle(appName)
@@ -171,12 +172,12 @@ const convertImages = async (e, fileList, type) => {
             data = await encodedWith.jxl
         }
 
-        if(!existsSync(OUTPUT_DIR)) {
-            mkdirSync(OUTPUT_DIR)
+        if(!existsSync(outputDir)) {
+            mkdirSync(outputDir)
         }
 
         let outputFilename = name.replace(/^.*\\/, "").replace(/^(.+)\..+$/, "$1")
-        writeFile(`${ OUTPUT_DIR }/optimized_${ outputFilename }.${ type }`, data.binary, (error, result) => {
+        writeFile(`${ outputDir }/optimized_${ outputFilename }.${ type }`, data.binary, (error, result) => {
             if(error) {
                 console.log("error", error)
                 returnObj.reuslt = "failure"
@@ -184,7 +185,7 @@ const convertImages = async (e, fileList, type) => {
             }
         })
         returnObj.fileList.push(`optimized_${ outputFilename }.${ type }`)
-        returnObj.pathList.push(`${ OUTPUT_DIR }/optimized_${ outputFilename }.${ type }`)
+        returnObj.pathList.push(`${ outputDir }/optimized_${ outputFilename }.${ type }`)
     }
 
     win.setTitle(appName)
@@ -215,13 +216,14 @@ const createWindow = () => {
         width: 960,
         height: 640,
         title: appName,
+        autoHideMenuBar: true,
         webPreferences: {
-            preload: path.join(__dirname, "preload.js")
+            preload: path.join(__dirname, "preload.js"),
+            devTools: devmode
         },
         icon: path.join(__dirname, "/src/img/icon.ico")
     })
 
-    win.menuBarVisible = false
     win.loadURL(`file://${ __dirname }/src/index.html`)
 }
 
