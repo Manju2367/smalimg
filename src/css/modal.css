@@ -18,6 +18,8 @@ li.list-settings {
 p.list-label {
     display: inline-block;
     width: 140px;
+    font-size: 14px;
+    font-weight: bold;
 }
 
 input.input-setting[type="text"] {

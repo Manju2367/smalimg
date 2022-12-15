@@ -75,8 +75,8 @@ button {
 }
 
 .label-toggle {
-    width: 50px;
-    height: 24px;
+    width: 40px;
+    height: 20px;
     background: #ccc;
     position: relative;
     display: inline-block;
@@ -88,8 +88,8 @@ button {
 .label-toggle:after {
     content: "";
     position: absolute;
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     border-radius: 100%;
     left: 0;
     top: 0;
@@ -104,12 +104,12 @@ button {
 }
 
 .input-toggle:checked + .label-toggle:after {
-    left: 26px;
+    left: 20px;
 }
 
 .button-toggle {
     display: inline-block;
     position: relative;
-    width: 50px;
-    height: 24px;
+    width: 40px;
+    height: 20px;
 }
