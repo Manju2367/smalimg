@@ -1,5 +1,10 @@
 "use strict"
 
+/**
+ * convert String to Boolean
+ * @param {String} str 
+ * @return {Boolean}
+ */
 const convertStrToBool = str => {
     if(typeof str !== "string") { 
         return Boolean(str)
@@ -11,3 +16,5 @@ const convertStrToBool = str => {
         return str !== ""
     }
 }
+
+exports.convertStrToBool = convertStrToBool

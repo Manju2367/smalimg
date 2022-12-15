@@ -3,12 +3,12 @@
 const { contextBridge, ipcRenderer } = require("electron")
 const { existsSync, writeFileSync } = require("fs")
 const propertiesReader = require("properties-reader")
+const { convertStrToBool } = require("./src/js/util")
 
 // app.iniの存在チェック
 if(!existsSync("app.ini")) {
     const ini = 
-        "# 出力ファイル\n" +
-        `dist=${ path.join(__dirname, "/dist") }\n\n` +
+        `dist=${ path.join(__dirname, "/dist") }\n` +
         "devmode=false\n"
     writeFileSync("app.ini", ini, { encoding: "utf-8" })
 }
@@ -26,5 +26,10 @@ contextBridge.exposeInMainWorld("properties", {
 
 contextBridge.exposeInMainWorld("electron", {
     openDialog: () => ipcRenderer.invoke("openDialog"),
-    closeModal: () => ipcRenderer.invoke("closeModal")
+    closeModal: () => ipcRenderer.invoke("closeModal"),
+    setProperties: () => ipcRenderer.invoke("setProperties")
+})
+
+contextBridge.exposeInMainWorld("util", {
+    convertStrToBool: (str) => convertStrToBool(str)
 })

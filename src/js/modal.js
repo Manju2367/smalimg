@@ -2,7 +2,7 @@
 
 window.addEventListener("load", () => {
 
-    const ini = window.properties.getIniAll()
+    let ini = window.properties.getIniAll()
     
     let listSettings = document.getElementById("ul-settings")
     let listItems = listSettings.querySelectorAll("li.list-settings")
@@ -11,6 +11,29 @@ window.addEventListener("load", () => {
     let buttonCancel = document.getElementById("button-cancel")
     let buttonCommit = document.getElementById("button-commit")
     let buttonCommitAndClose = document.getElementById("button-commit-and-close")
+
+    const initInput = () => {
+        ini = window.properties.getIniAll()
+
+        listItems.forEach(item => {
+            let key = item.dataset.key
+            let input = item.querySelector(".input-setting")
+
+            if(input.tagName === "INPUT") {
+                switch(input.type) {
+                    case "text":
+                        input.value = ini[key]
+                        input.dataset.old = ini[key]
+                        break
+
+                    case "checkbox":
+                        input.checked = window.util.convertStrToBool(ini[key])
+                        input.dataset.old = ini[key]
+                        break
+                }
+            }
+        })
+    }
 
     /**
      * 
@@ -35,7 +58,7 @@ window.addEventListener("load", () => {
                         break
     
                     case "checkbox":
-                        if(input.checked !== convertStrToBool(input.dataset.old)) {
+                        if(input.checked !== window.util.convertStrToBool(input.dataset.old)) {
                             updateList.push({
                                 key: key,
                                 value: input.checked
@@ -66,7 +89,8 @@ window.addEventListener("load", () => {
             const { key, value } = obj
             window.properties.setIni(key, value)
             window.properties.save().then(result => {
-                // console.log("commit")
+                window.electron.setProperties()
+                initInput()
             }, error => {
                 console.log(error)
             })
@@ -78,6 +102,7 @@ window.addEventListener("load", () => {
             const { key, value } = obj
             window.properties.setIni(key, value)
             window.properties.save().then(result => {
+                window.electron.setProperties()
                 window.electron.closeModal()
             }, error => {
                 console.log(error)
@@ -85,23 +110,6 @@ window.addEventListener("load", () => {
         })
     }
 
-    listItems.forEach(item => {
-        let key = item.dataset.key
-        let input = item.querySelector(".input-setting")
-
-        if(input.tagName === "INPUT") {
-            switch(input.type) {
-                case "text":
-                    input.value = ini[key]
-                    input.dataset.old = ini[key]
-                    break
-
-                case "checkbox":
-                    input.checked = convertStrToBool(ini[key])
-                    input.dataset.old = ini[key]
-                    break
-            }
-        }
-    })
+    initInput()
 
 })

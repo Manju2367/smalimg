@@ -6,22 +6,22 @@ const path = require("path")
 const { ImagePool } = require("@squoosh/lib")
 const { cpus } = require("os")
 const { readFileSync, existsSync, mkdirSync, writeFile, writeFileSync } = require("fs")
+const { convertStrToBool } = require("./src/js/util")
 
 // app.iniの存在チェック
 if(!existsSync("app.ini")) {
     const ini = 
-        "# 出力ファイル\n" +
-        `dist=${ path.join(__dirname, "/dist") }\n\n` +
+        `dist=${ path.join(__dirname, "/dist") }\n` +
         "devmode=false\n"
     writeFileSync("app.ini", ini, { encoding: "utf-8" })
 }
 
 const imagePool = new ImagePool(cpus().length)
-const properties = propertiesReader("app.ini")
+let properties = propertiesReader("app.ini")
 const appName = "smalimg"
 // 画像出力フォルダ
-const outputDir = properties.get("dist")
-const devmode = Boolean(properties.get("devmode"))
+let outputDir = properties.get("dist")
+let devmode = convertStrToBool(properties.get("devmode"))
 // use default options
 const jpgEncodeOptions = {
     mozjpeg: {}
@@ -237,6 +237,13 @@ const closeModal = () => {
     modal.close()   
 }
 
+const setProperties = () => {
+    properties = propertiesReader("app.ini")
+
+    outputDir = properties.get("dist")
+    devmode = convertStrToBool(properties.get("devmode"))
+}
+
 const createWindow = () => {
     win = new BrowserWindow({
         width: 960,
@@ -263,12 +270,12 @@ const createWindow = () => {
                 maximizable: false,
                 minimizable: false,
                 fullscreenable: false,
-                resizable: true,//false,
+                resizable: devmode,
                 autoHideMenuBar: true,
                 webPreferences: {
                     preload: path.join(__dirname, "modal_preload.js"),
                     nodeIntegration: true,
-                    devTools: true//false
+                    devTools: devmode
                 }
             })
 
@@ -285,6 +292,7 @@ app.whenReady().then(() => {
     ipcMain.handle("readBase64", readBase64)
     ipcMain.handle("openDialog", openDialog)
     ipcMain.handle("closeModal", closeModal)
+    ipcMain.handle("setProperties", setProperties)
 
     createWindow()
     app.on("activate", () => {
