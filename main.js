@@ -45,6 +45,10 @@ let win = null
  * @param {Array<String>} fileList 
  */
 const compressImages = async (e, fileList) => {
+    let p = 0
+    let n = fileList.length
+    win.setProgressBar(p)
+
     const imagePoolList = fileList.map(fileName => {
         const imageFile = readFileSync(fileName)
         const image = imagePool.ingestImage(imageFile)
@@ -68,8 +72,11 @@ const compressImages = async (e, fileList) => {
             if(/\.(jxl)$/i.test(item.name)) {
                 await image.encode(jxlEncodeOptions)
             }
+
+            p += 1/n
+            win.setProgressBar(p)
         })
-    )
+    ).then(() => win.setProgressBar(-1))
 
     let returnObj = {
         reuslt: "success",
@@ -120,6 +127,10 @@ const compressImages = async (e, fileList) => {
  * @param {String} type 
  */
 const convertImages = async (e, fileList, type) => {
+    let p = 0
+    let n = fileList.length
+    win.setProgressBar(p)
+
     const imagePoolList = fileList.map(fileName => {
         const imageFile = readFileSync(fileName)
         const image = imagePool.ingestImage(imageFile)
@@ -143,8 +154,11 @@ const convertImages = async (e, fileList, type) => {
             if(type === "jxl") {
                 await image.encode(jxlEncodeOptions)
             }
+
+            p += 1/n
+            win.setProgressBar(p)
         })
-    )
+    ).then(() => win.setProgressBar(-1))
 
     let returnObj = {
         reuslt: "success",
