@@ -13,14 +13,15 @@ if(!existsSync("app.ini")) {
     writeFileSync("app.ini", ini, { encoding: "utf-8" })
 }
 
-const properties = propertiesReader("app.ini")
+const properties = propertiesReader("app.ini", "utf-8")
 
 
 
 contextBridge.exposeInMainWorld("properties", {
     getIni: (key) => properties.get(key),
     getIniAll: () => properties.getAllProperties(),
-    setIni: (key, value) => properties.set(key, value)
+    setIni: (key, value) => properties.set(key, value),
+    save: () => properties.save("app.ini")
 })
 
 contextBridge.exposeInMainWorld("electron", {

@@ -12,25 +12,42 @@ window.addEventListener("load", () => {
     let buttonCommit = document.getElementById("button-commit")
     let buttonCommitAndClose = document.getElementById("button-commit-and-close")
 
-    listItems.forEach(item => {
-        let key = item.dataset.key
-        /** @type {HTMLInputElement} */
-        let input = item.querySelector(".input-setting")
+    /**
+     * 
+     * @return {Array<{key: String, value: Any}>}
+     */
+    const checkUpdate = () => {
+        let updateList = []
 
-        if(input.tagName === "INPUT") {
-            switch(input.type) {
-                case "text":
-                    input.value = ini[key]
-                    input.dataset.old = ini[key]
-                    break
-
-                case "checkbox":
-                    input.checked = Boolean(ini[key])
-                    input.dataset.old = ini[key]
-                    break
+        listItems.forEach(item => {
+            let key = item.dataset.key
+            let input = item.querySelector(".input-setting")
+    
+            if(input.tagName === "INPUT") {
+                switch(input.type) {
+                    case "text":
+                        if(input.value !== input.dataset.old) {
+                            updateList.push({
+                                key: key,
+                                value: input.value
+                            })
+                        }
+                        break
+    
+                    case "checkbox":
+                        if(input.checked !== convertStrToBool(input.dataset.old)) {
+                            updateList.push({
+                                key: key,
+                                value: input.checked
+                            })
+                        }
+                        break
+                }
             }
-        }
-    })
+        })
+
+        return updateList
+    }
 
     buttonOutDist.onclick = () => {
         window.electron.openDialog().then(result => {
@@ -45,11 +62,46 @@ window.addEventListener("load", () => {
     }
 
     buttonCommit.onclick = () => {
-
+        checkUpdate().map((obj) => {
+            const { key, value } = obj
+            window.properties.setIni(key, value)
+            window.properties.save().then(result => {
+                // console.log("commit")
+            }, error => {
+                console.log(error)
+            })
+        })
     }
 
     buttonCommitAndClose.onclick = () => {
-
+        checkUpdate().map((obj) => {
+            const { key, value } = obj
+            window.properties.setIni(key, value)
+            window.properties.save().then(result => {
+                window.electron.closeModal()
+            }, error => {
+                console.log(error)
+            })
+        })
     }
+
+    listItems.forEach(item => {
+        let key = item.dataset.key
+        let input = item.querySelector(".input-setting")
+
+        if(input.tagName === "INPUT") {
+            switch(input.type) {
+                case "text":
+                    input.value = ini[key]
+                    input.dataset.old = ini[key]
+                    break
+
+                case "checkbox":
+                    input.checked = convertStrToBool(ini[key])
+                    input.dataset.old = ini[key]
+                    break
+            }
+        }
+    })
 
 })
