@@ -38,6 +38,63 @@ const jxlEncodeOptions = {
 
 let win = null
 let modal = null
+let tempMenu = [
+    {
+        label: "ファイル",
+        role: "fileMenu",
+        submenu: [
+            {
+                label: "フォルダを開く",
+                click: () => {
+                    shell.showItemInFolder(outputDir)
+                }
+            },
+            {
+                label: "設定",
+                click: () => {
+                    modal = new BrowserWindow({
+                        width: 640,
+                        height: 480,
+                        parent: win,
+                        modal: true,
+                        title: `設定 - ${ appName }`,
+                        icon: path.join(__dirname, "/src/img/icon.ico"),
+                        maximizable: false,
+                        minimizable: false,
+                        fullscreenable: false,
+                        resizable: devmode,
+                        autoHideMenuBar: true,
+                        webPreferences: {
+                            preload: path.join(__dirname, "modal_preload.js"),
+                            nodeIntegration: true,
+                            devTools: devmode
+                        }
+                    })
+        
+                    modal.loadFile(path.join(__dirname, "/src/modal.html"))
+                }
+            }
+        ]
+    },
+    {
+        label: "ヘルプ",
+        role: "help",
+        submenu: [
+            {
+                label: "ヘルプ",
+                click: async () => {
+                    await shell.openExternal("https://github.com/Manju2367/smalimg")
+                }
+            },
+            {
+                label: "問題を報告",
+                click: async () => {
+                    await shell.openExternal("https://github.com/Manju2367/smalimg/issues")
+                }
+            }
+        ]
+    }
+]
 
 
 
@@ -48,6 +105,7 @@ let modal = null
  */
 const compressImages = async (e, fileList) => {
     let p = 0
+    let f = 0
     let n = fileList.length
     win.setProgressBar(p)
 
@@ -57,7 +115,7 @@ const compressImages = async (e, fileList) => {
         return { name: fileName, image}
     })
 
-    win.setTitle(`${ appName } - 圧縮中`)
+    win.setTitle(`${ appName } - 圧縮中（${ f }/${ n }）`)
 
     await Promise.all(
         imagePoolList.map(async (item) => {
@@ -76,7 +134,9 @@ const compressImages = async (e, fileList) => {
             }
 
             p += 1/n
+            f++
             win.setProgressBar(p)
+            win.setTitle(`${ appName } - 圧縮中（${ f }/${ n }）`)
         })
     ).then(() => win.setProgressBar(-1))
 
@@ -130,6 +190,7 @@ const compressImages = async (e, fileList) => {
  */
 const convertImages = async (e, fileList, type) => {
     let p = 0
+    let f = 0
     let n = fileList.length
     win.setProgressBar(p)
 
@@ -139,7 +200,7 @@ const convertImages = async (e, fileList, type) => {
         return { name: fileName, image}
     })
 
-    win.setTitle(`${ appName } - 変換中`)
+    win.setTitle(`${ appName } - 変換中（${ f }/${ n }）`)
 
     await Promise.all(
         imagePoolList.map(async (item) => {
@@ -158,7 +219,9 @@ const convertImages = async (e, fileList, type) => {
             }
 
             p += 1/n
+            f++
             win.setProgressBar(p)
+            win.setTitle(`${ appName } - 変換中（${ f }/${ n }）`)
         })
     ).then(() => win.setProgressBar(-1))
 
@@ -242,6 +305,7 @@ const setProperties = () => {
 
     outputDir = properties.get("dist")
     devmode = convertStrToBool(properties.get("devmode"))
+    win.setMenu(Menu.buildFromTemplate(tempMenu))
 }
 
 const createWindow = () => {
@@ -256,63 +320,7 @@ const createWindow = () => {
         icon: path.join(__dirname, "/src/img/icon.ico")
     })
 
-    win.setMenu(Menu.buildFromTemplate([
-        {
-            label: "ファイル",
-            role: "fileMenu",
-            submenu: [
-                {
-                    label: "フォルダを開く",
-                    click: () => {
-                        shell.showItemInFolder(outputDir)
-                    }
-                },
-                {
-                    label: "設定",
-                    click: () => {
-                        modal = new BrowserWindow({
-                            width: 640,
-                            height: 480,
-                            parent: win,
-                            modal: true,
-                            title: `設定 - ${ appName }`,
-                            icon: path.join(__dirname, "/src/img/icon.ico"),
-                            maximizable: false,
-                            minimizable: false,
-                            fullscreenable: false,
-                            resizable: devmode,
-                            autoHideMenuBar: true,
-                            webPreferences: {
-                                preload: path.join(__dirname, "modal_preload.js"),
-                                nodeIntegration: true,
-                                devTools: devmode
-                            }
-                        })
-            
-                        modal.loadFile(path.join(__dirname, "/src/modal.html"))
-                    }
-                }
-            ]
-        },
-        {
-            label: "ヘルプ",
-            role: "help",
-            submenu: [
-                {
-                    label: "ヘルプ",
-                    click: async () => {
-                        await shell.openExternal("https://github.com/Manju2367/smalimg")
-                    }
-                },
-                {
-                    label: "問題を報告",
-                    click: async () => {
-                        await shell.openExternal("https://github.com/Manju2367/smalimg/issues")
-                    }
-                }
-            ]
-        }
-    ]))
+    win.setMenu(Menu.buildFromTemplate(tempMenu))
     win.loadURL(`file://${ __dirname }/src/index.html`)
 }
 
