@@ -4,10 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "test": "chcp 65001 && electron .",
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make"
+    "test": "chcp 65001 && electron ."
   },
   "repository": {
     "type": "git",
@@ -20,15 +17,10 @@
   },
   "homepage": "https://github.com/Manju2367/smalimg#readme",
   "devDependencies": {
-    "@electron-forge/cli": "^6.0.1",
-    "@electron-forge/maker-deb": "^6.0.1",
-    "@electron-forge/maker-rpm": "^6.0.1",
-    "@electron-forge/maker-squirrel": "^6.0.1",
-    "@electron-forge/maker-zip": "^6.0.1",
-    "electron": "^21.2.2"
+    "electron": "^21.2.2",
+    "electron-builder": "^23.6.0"
   },
   "dependencies": {
-    "@squoosh/lib": "^0.4.0",
-    "electron-squirrel-startup": "^1.0.0"
+    "@squoosh/lib": "^0.4.0"
   }
 }
