@@ -1,6 +1,6 @@
 "use strict"
 
-const { app, BrowserWindow, ipcMain, Menu, MenuItem, dialog } = require("electron")
+const { app, BrowserWindow, ipcMain, Menu, MenuItem, dialog, shell } = require("electron")
 const propertiesReader = require("properties-reader")
 const path = require("path")
 const { ImagePool } = require("@squoosh/lib")
@@ -256,33 +256,63 @@ const createWindow = () => {
         icon: path.join(__dirname, "/src/img/icon.ico")
     })
 
-    const menu = new Menu()
-    menu.append(new MenuItem({
-        label: "設定",
-        click: () => {
-            modal = new BrowserWindow({
-                width: 640,
-                height: 480,
-                parent: win,
-                modal: true,
-                title: `設定 - ${ appName }`,
-                icon: path.join(__dirname, "/src/img/icon.ico"),
-                maximizable: false,
-                minimizable: false,
-                fullscreenable: false,
-                resizable: devmode,
-                autoHideMenuBar: true,
-                webPreferences: {
-                    preload: path.join(__dirname, "modal_preload.js"),
-                    nodeIntegration: true,
-                    devTools: devmode
+    win.setMenu(Menu.buildFromTemplate([
+        {
+            label: "ファイル",
+            role: "fileMenu",
+            submenu: [
+                {
+                    label: "フォルダを開く",
+                    click: () => {
+                        shell.showItemInFolder(outputDir)
+                    }
+                },
+                {
+                    label: "設定",
+                    click: () => {
+                        modal = new BrowserWindow({
+                            width: 640,
+                            height: 480,
+                            parent: win,
+                            modal: true,
+                            title: `設定 - ${ appName }`,
+                            icon: path.join(__dirname, "/src/img/icon.ico"),
+                            maximizable: false,
+                            minimizable: false,
+                            fullscreenable: false,
+                            resizable: devmode,
+                            autoHideMenuBar: true,
+                            webPreferences: {
+                                preload: path.join(__dirname, "modal_preload.js"),
+                                nodeIntegration: true,
+                                devTools: devmode
+                            }
+                        })
+            
+                        modal.loadFile(path.join(__dirname, "/src/modal.html"))
+                    }
                 }
-            })
-
-            modal.loadFile(path.join(__dirname, "/src/modal.html"))
+            ]
+        },
+        {
+            label: "ヘルプ",
+            role: "help",
+            submenu: [
+                {
+                    label: "ヘルプ",
+                    click: async () => {
+                        await shell.openExternal("https://github.com/Manju2367/smalimg")
+                    }
+                },
+                {
+                    label: "問題を報告",
+                    click: async () => {
+                        await shell.openExternal("https://github.com/Manju2367/smalimg/issues")
+                    }
+                }
+            ]
         }
-    }))
-    win.setMenu(menu)
+    ]))
     win.loadURL(`file://${ __dirname }/src/index.html`)
 }
 
