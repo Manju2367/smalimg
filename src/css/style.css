@@ -165,6 +165,10 @@ img.img-check.active {
     opacity: 1;
 }
 
+canvas#canvas-for-copy {
+    display: none;
+}
+
 
 
 /* loading container */

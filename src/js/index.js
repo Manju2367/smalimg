@@ -12,6 +12,8 @@ window.addEventListener("load", () => {
     let menuArrowWrapper = document.getElementById("menu-arrow-wrapper")
     let otpContainer = document.getElementById("otp-container")
     let otpItemContainer = document.getElementById("otp-item-container")
+    let canvasForCopy = document.getElementById("canvas-for-copy")
+    let ctxForCopy = canvasForCopy.getContext("2d")
 
 
 
@@ -41,13 +43,11 @@ window.addEventListener("load", () => {
         let base64 = returnObj.base64
         let img = new Image()
         img.onload = () => {
-            let canvas = document.createElement("canvas")
-            let ctx = canvas.getContext("2d")
-            canvas.width = img.width
-            canvas.height = img.height
-            ctx.drawImage(img, 0, 0)
+            canvasForCopy.width = img.width
+            canvasForCopy.height = img.height
+            ctxForCopy.drawImage(img, 0, 0)
     
-            canvas.toBlob(async blob => {
+            canvasForCopy.toBlob(async blob => {
                 let item = {}
                 item[`image/png`] = blob
                 const ci = new ClipboardItem(item)

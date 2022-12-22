@@ -17,11 +17,11 @@ if(!existsSync("app.ini")) {
 }
 
 const imagePool = new ImagePool(cpus().length)
-let properties = propertiesReader("app.ini")
 const appName = "smalimg"
-// 画像出力フォルダ
-let outputDir = properties.get("dist")
+let properties = propertiesReader("app.ini")
+let outputDir = path.resolve(properties.get("dist"))
 let devmode = convertStrToBool(properties.get("devmode"))
+
 // use default options
 const jpgEncodeOptions = {
     mozjpeg: {}
@@ -320,6 +320,7 @@ const createWindow = () => {
         icon: path.join(__dirname, "/src/img/icon.ico")
     })
 
+    win.webContents.openDevTools()
     win.setMenu(Menu.buildFromTemplate(tempMenu))
     win.loadURL(`file://${ __dirname }/src/index.html`)
 }
